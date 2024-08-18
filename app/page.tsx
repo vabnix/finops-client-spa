@@ -1,8 +1,13 @@
 'use client'
 
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import dynamic from 'next/dynamic';
 import { Cloud, Server, DollarSign, BarChart2 } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+
+// Dynamically import the Chart component with ssr option set to false
+const DynamicChart = dynamic(() => import('../components/Chart'), { ssr: false });
 
 const mockChartData = [
   { month: 'Jan', expenses: 12000 },
@@ -28,50 +33,124 @@ const topServices = [
 ];
 
 const AWSMetricCard = ({ icon, title, value, change }) => (
-  <div className="bg-white rounded-lg p-4 shadow-md">
-    {icon}
-    <h3 className="text-gray-500 text-sm mt-2">{title}</h3>
-    <p className="text-2xl font-bold mt-1">{value}</p>
-    <p className={`text-sm ${change.startsWith('+') ? 'text-green-500' : 'text-red-500'}`}>
-      {change}
-    </p>
-  </div>
+  <Card>
+    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+      <CardTitle className="text-sm font-medium">{title}</CardTitle>
+      {icon}
+    </CardHeader>
+    <CardContent>
+      <div className="text-2xl font-bold">{value}</div>
+      <p className={`text-xs ${change.startsWith('+') ? 'text-green-500' : 'text-red-500'}`}>
+        {change}
+      </p>
+    </CardContent>
+  </Card>
 );
 
 export default function Home() {
   return (
-    <div className="p-6 bg-gray-100">
-      <h1 className="text-3xl font-bold mb-8">Dashboard</h1>
+    <div className="p-6 space-y-6">
+      <h1 className="text-3xl font-bold">Dashboard</h1>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <AWSMetricCard 
-          icon={<DollarSign className="w-8 h-8 text-blue-500" />}
+          icon={<DollarSign className="h-4 w-4 text-muted-foreground" />}
           title="Current Month's Expenses"
           value="$25,000"
           change="+5.2%"
         />
         <AWSMetricCard 
-          icon={<DollarSign className="w-8 h-8 text-green-500" />}
+          icon={<DollarSign className="h-4 w-4 text-muted-foreground" />}
           title="Previous Month's Bill"
           value="$23,500"
           change="-2.1%"
         />
         <AWSMetricCard 
-          icon={<DollarSign className="w-8 h-8 text-purple-500" />}
+          icon={<DollarSign className="h-4 w-4 text-muted-foreground" />}
           title="Year-to-Date Expenses"
           value="$216,000"
           change="+8.7%"
         />
         <AWSMetricCard 
-          icon={<Server className="w-8 h-8 text-red-500" />}
+          icon={<Server className="h-4 w-4 text-muted-foreground" />}
           title="Total EC2 Servers"
           value="128"
           change="+3"
         />
       </div>
       
-      {/* Rest of the component remains the same */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle>Forecasted Monthly AWS Expenses</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <DynamicChart data={mockChartData} />
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader>
+            <CardTitle>Top 5 Utilized AWS Services</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-2">
+              {topServices.map((service, index) => (
+                <li key={index} className="flex justify-between items-center">
+                  <span>{service.name}</span>
+                  <span className="text-blue-500 font-semibold">{service.usage}</span>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      </div>
       
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Instance Type Summary</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex justify-between items-center">
+              <div className="text-center">
+                <p className="text-sm text-muted-foreground">Reserved</p>
+                <p className="text-xl font-bold text-green-500">35%</p>
+              </div>
+              <div className="text-center">
+                <p className="text-sm text-muted-foreground">On-Demand</p>
+                <p className="text-xl font-bold text-blue-500">45%</p>
+              </div>
+              <div className="text-center">
+                <p className="text-sm text-muted-foreground">Savings Plan</p>
+                <p className="text-xl font-bold text-purple-500">20%</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader>
+            <CardTitle>Storage Summary</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex justify-between items-center">
+              <div className="text-center">
+                <p className="text-sm text-muted-foreground">S3</p>
+                <p className="text-xl font-bold text-blue-500">500 TB</p>
+              </div>
+              <div className="text-center">
+                <p className="text-sm text-muted-foreground">EBS</p>
+                <p className="text-xl font-bold text-green-500">200 TB</p>
+              </div>
+              <div className="text-center">
+                <p className="text-sm text-muted-foreground">Glacier</p>
+                <p className="text-xl font-bold text-purple-500">1 PB</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

@@ -1,18 +1,14 @@
-import './globals.css'
 import Header from '../components/Header'
-import Footer from '../components/Footer'
+import './globals.css'
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="flex flex-col min-h-screen bg-gray-100">
-        <Header />
-        <main className="flex-grow container mx-auto mt-8 p-4">{children}</main>
-        <Footer />
+      <body className="bg-[#EEF2F6]">
+        <div className="flex">
+          <Header />
+          <main className="flex-1 p-8">{children}</main>
+        </div>
       </body>
     </html>
   )

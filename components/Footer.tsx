@@ -4,8 +4,8 @@ export default function Footer() {
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-4 md:mb-0">
-              <h2 className="text-xl font-bold">AWS Checker</h2>
-              <p className="text-sm text-gray-400">Simplifying AWS management</p>
+              <h2 className="text-xl font-bold">FinOps App</h2>
+              <p className="text-sm text-gray-400">Simplifying your AWS management with AI Powered monitoring</p>
             </div>
             <nav>
               <ul className="flex space-x-4">

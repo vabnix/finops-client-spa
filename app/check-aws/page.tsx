@@ -12,7 +12,7 @@ export default function CheckAWS() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="container mx-auto p-6">
       <h1 className="text-2xl font-bold mb-4">Check My AWS</h1>
       <div className="flex space-x-2 mb-4">
         <input
