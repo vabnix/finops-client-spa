@@ -10,55 +10,62 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { CreditCard, DollarSign, MoreVertical } from 'lucide-react'
 import Link from 'next/link'
 
-const CreditCardDisplay = ({ cardNumber, cardName, expiryDate, cardType }) => {
-    const getCardColor = () => {
-        switch(cardType.toLowerCase()) {
-          case 'visa': return 'bg-blue-500';
-          case 'mastercard': return 'bg-green-500';
-          case 'amex': return 'bg-gray-500';
-          default: return 'bg-purple-500';
-        }
-      }
+interface CreditCardDisplayProps {
+  cardNumber: string;
+  cardName: string;
+  expiryDate: string;
+  cardType: string;
+}
 
-      const formatCardNumber = (number) => {
-        return number.replace(/\s/g, '').replace(/(\d{4})/g, '$1 ').trim();
-      }
+const CreditCardDisplay: React.FC<CreditCardDisplayProps> = ({ cardNumber, cardName, expiryDate, cardType }) => {
+  const getCardColor = () => {
+    switch(cardType.toLowerCase()) {
+      case 'visa': return 'bg-blue-500';
+      case 'mastercard': return 'bg-green-500';
+      case 'amex': return 'bg-gray-500';
+      default: return 'bg-purple-500';
+    }
+  }
 
-      return (
-        <div className={`w-96 h-56 rounded-xl relative text-white shadow-2xl transition-transform transform hover:scale-105 ${getCardColor()}`}>
-          <div className="w-full px-8 absolute top-8">
-            <div className="flex justify-between">
-              <div className="">
-                <p className="font-light">Card Number</p>
-                <p className="font-medium tracking-widest">{formatCardNumber(cardNumber)}</p>
-              </div>
-              {cardType === 'visa' && (
-                <img className="w-16 h-16" src="/visa-white.png" alt="Visa" />
-              )}
-              {cardType === 'mastercard' && (
-                <div className="flex space-x-1">
-                  <div className="w-8 h-8 rounded-full bg-red-500 opacity-75"></div>
-                  <div className="w-8 h-8 rounded-full bg-yellow-500 opacity-75"></div>
-                </div>
-              )}
+  const formatCardNumber = (number: string) => {
+    return number.replace(/\s/g, '').replace(/(\d{4})/g, '$1 ').trim();
+  }
+
+  return (
+    <div className={`w-96 h-56 rounded-xl relative text-white shadow-2xl transition-transform transform hover:scale-105 ${getCardColor()}`}>
+      <div className="w-full px-8 absolute top-8">
+        <div className="flex justify-between">
+          <div className="">
+            <p className="font-light">Card Number</p>
+            <p className="font-medium tracking-widest">{formatCardNumber(cardNumber)}</p>
+          </div>
+          {cardType === 'visa' && (
+            <img className="w-16 h-16" src="/visa-white.png" alt="Visa" />
+          )}
+          {cardType === 'mastercard' && (
+            <div className="flex space-x-1">
+              <div className="w-8 h-8 rounded-full bg-red-500 opacity-75"></div>
+              <div className="w-8 h-8 rounded-full bg-yellow-500 opacity-75"></div>
             </div>
-            <div className="pt-1">
-              <p className="font-light">Card Holder</p>
-              <p className="font-medium tracking-wider">{cardName}</p>
+          )}
+        </div>
+        <div className="pt-1">
+          <p className="font-light">Card Holder</p>
+          <p className="font-medium tracking-wider">{cardName}</p>
+        </div>
+        <div className="pt-6 pr-6">
+          <div className="flex justify-between">
+            <div>
+              <p className="font-light text-xs">Expires</p>
+              <p className="font-medium tracking-wider text-sm">{expiryDate}</p>
             </div>
-            <div className="pt-6 pr-6">
-              <div className="flex justify-between">
-                <div>
-                  <p className="font-light text-xs">Expires</p>
-                  <p className="font-medium tracking-wider text-sm">{expiryDate}</p>
-                </div>
-                <MoreVertical className="h-4 w-4" />
-              </div>
-            </div>
+            <MoreVertical className="h-4 w-4" />
           </div>
         </div>
-      )
-    }
+      </div>
+    </div>
+  )
+}
 
 const mockInvoices = [
   { id: 'INV-001', date: '2023-07-01', amount: 150.00, status: 'Paid' },
@@ -66,20 +73,27 @@ const mockInvoices = [
   { id: 'INV-003', date: '2023-09-01', amount: 200.00, status: 'Unpaid' },
 ]
 
+interface CardDetails {
+  cardNumber: string;
+  cardName: string;
+  expiryDate: string;
+  cardType: string;
+}
+
 export default function BillingPage() {
-  const [cardDetails, setCardDetails] = useState({
+  const [cardDetails, setCardDetails] = useState<CardDetails>({
     cardNumber: '**** **** **** 1234',
     cardName: 'John Doe',
     expiryDate: '12/25',
     cardType: 'Visa'
   })
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setCardDetails(prev => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     // Here you would typically send the card details to your backend
     console.log('Updating card details:', cardDetails)

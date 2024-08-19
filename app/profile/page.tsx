@@ -8,8 +8,27 @@ import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { User, Mail, Phone, Building, MapPin, Globe, Upload } from 'lucide-react'
 
+interface Contact {
+  name: string;
+  email: string;
+  phone: string;
+}
+
+interface ClientData {
+  clientId: string;
+  name: string;
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+  primaryContact: Contact;
+  secondaryContact: Contact;
+  logo: string | null;
+}
+
 export default function ClientProfilePage() {
-  const [clientData, setClientData] = useState({
+  const [clientData, setClientData] = useState<ClientData>({
     clientId: 'CL-001',
     name: 'Acme Corporation',
     address: '123 Business Ave',
@@ -30,35 +49,49 @@ export default function ClientProfilePage() {
     logo: null
   })
 
-  const handleInputChange = (e, section = null) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, section: keyof ClientData | null = null) => {
     const { name, value } = e.target
-    if (section) {
-      setClientData(prev => ({
-        ...prev,
-        [section]: { ...prev[section], [name]: value }
-      }))
-    } else {
-      setClientData(prev => ({ ...prev, [name]: value }))
-    }
+    setClientData(prev => {
+      if (section && (section === 'primaryContact' || section === 'secondaryContact')) {
+        return {
+          ...prev,
+          [section]: { ...prev[section], [name]: value }
+        }
+      } else if (section) {
+        return {
+          ...prev,
+          [section]: value
+        }
+      } else {
+        return { ...prev, [name]: value }
+      }
+    })
   }
 
-  const handleLogoUpload = (e) => {
-    const file = e.target.files[0]
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
     if (file) {
       const reader = new FileReader()
       reader.onloadend = () => {
-        setClientData(prev => ({ ...prev, logo: reader.result }))
+        setClientData(prev => ({ ...prev, logo: reader.result as string }))
       }
       reader.readAsDataURL(file)
     }
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     console.log('Updating client profile:', clientData)
   }
 
-  const InputField = ({ icon: Icon, label, name, value, onChange, section = null }) => (
+  const InputField: React.FC<{
+    icon: React.ElementType;
+    label: string;
+    name: string;
+    value: string;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>, section: keyof ClientData | null) => void;
+    section?: keyof ClientData | null;
+  }> = ({ icon: Icon, label, name, value, onChange, section = null }) => (
     <div className="space-y-2">
       <Label htmlFor={name} className="flex items-center space-x-2">
         <Icon className="h-4 w-4 text-gray-500" />
@@ -75,7 +108,11 @@ export default function ClientProfilePage() {
     </div>
   )
 
-  const ContactCard = ({ title, contact, section }) => (
+  const ContactCard: React.FC<{
+    title: string;
+    contact: Contact;
+    section: 'primaryContact' | 'secondaryContact';
+  }> = ({ title, contact, section }) => (
     <Card className="flex-1">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
@@ -110,20 +147,20 @@ export default function ClientProfilePage() {
   )
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto p-6 max-w-4xl">
       <h1 className="text-3xl font-bold mb-6">Client Profile</h1>
       
       <form onSubmit={handleSubmit} className="space-y-6">
         <Card>
           <CardHeader>
             <CardTitle>Company Information</CardTitle>
-            <CardDescription>Update your company's details here.</CardDescription>
+            <CardDescription>Update your companys details here.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="flex items-center space-x-4">
               <Avatar className="h-24 w-24">
-                <AvatarImage src={clientData.logo} alt="Company logo" />
-                <AvatarFallback>{clientData.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                <AvatarImage src={clientData.logo || undefined} alt="Company logo" />
+                <AvatarFallback>{clientData.name.charAt(0)}</AvatarFallback>
               </Avatar>
               <div>
                 <h3 className="text-lg font-semibold">{clientData.name}</h3>

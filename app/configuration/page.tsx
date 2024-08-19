@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { Button } from "@/components/ui/button"
 
 export default function Configuration() {
   const [awsKey, setAwsKey] = useState('')
@@ -29,12 +30,11 @@ export default function Configuration() {
           placeholder="AWS Secret Key"
           className="w-full p-2 border rounded"
         />
-        <button 
+        <Button 
           onClick={handleSave}
-          className="w-full bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
         >
           Save Configuration
-        </button>
+        </Button>
       </div>
     </div>
   )

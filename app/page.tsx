@@ -1,10 +1,12 @@
 'use client'
 
-import React from 'react';
+import { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic';
 import { Cloud, Server, DollarSign, BarChart2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { useRouter } from 'next/navigation'
+import { getCurrentUser } from '@/app/services/api'
 
 // Dynamically import the Chart component with ssr option set to false
 const DynamicChart = dynamic(() => import('../components/Chart'), { ssr: false });
@@ -32,7 +34,15 @@ const topServices = [
   { name: 'CloudFront', usage: '5%' },
 ];
 
-const AWSMetricCard = ({ icon, title, value, change }) => (
+interface AWSMetricCardProps {
+  icon: React.ReactNode;
+  title: string;
+  value: string;
+  change: string;
+  color: string;
+}
+
+const AWSMetricCard: React.FC<AWSMetricCardProps> = ({ icon, title, value, change, color }) => (
   <Card>
     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
       <CardTitle className="text-sm font-medium">{title}</CardTitle>
@@ -48,9 +58,43 @@ const AWSMetricCard = ({ icon, title, value, change }) => (
 );
 
 export default function Home() {
+  const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const router = useRouter()
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      console.log('Checking authentication...')
+      const token = localStorage.getItem('token')
+      if (!token) {
+        console.log('No token found, redirecting to login')
+        router.push('/login')
+        return
+      }
+
+      try {
+        console.log('Token found, fetching user data')
+        const response = await getCurrentUser()
+        console.log('User data received:', response.data)
+        setUser(response.data)
+        setLoading(false)
+      } catch (error) {
+        console.error('Error fetching user data:', error)
+        localStorage.removeItem('token')
+        router.push('/login')
+      }
+    }
+
+    checkAuth()
+  }, [router])
+
+  if (loading) {
+    return <div>Loading...</div>
+  }
+
   return (
     <div className="p-6 space-y-6">
-      <h1 className="text-3xl font-bold">Dashboard</h1>
+      <h1 className="text-3xl font-bold">Welcome!</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <AWSMetricCard 
@@ -58,24 +102,28 @@ export default function Home() {
           title="Current Month's Expenses"
           value="$25,000"
           change="+5.2%"
+          color="green"
         />
         <AWSMetricCard 
           icon={<DollarSign className="h-4 w-4 text-muted-foreground" />}
           title="Previous Month's Bill"
           value="$23,500"
           change="-2.1%"
+          color="red"
         />
         <AWSMetricCard 
           icon={<DollarSign className="h-4 w-4 text-muted-foreground" />}
           title="Year-to-Date Expenses"
           value="$216,000"
           change="+8.7%"
+          color="green"
         />
         <AWSMetricCard 
           icon={<Server className="h-4 w-4 text-muted-foreground" />}
           title="Total EC2 Servers"
           value="128"
           change="+3"
+          color="green"
         />
       </div>
       

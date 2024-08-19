@@ -14,7 +14,7 @@ Storage Summary
 Update the page to 
 
 # Authentication
-Added webpage authentication with login screen and update the website that only athenticated user can access the website 
+Added webpage authentication with login screen, registraction page and update the website that only athenticated user can access the website 
 
 # Profile Page
 Update the Profile page to a modern looking Client Profile Page and Include:
@@ -38,3 +38,7 @@ Update the Profile page to a modern looking Client Profile Page and Include:
 
 # Chatbot
 
+Implement actual API calls for authentication.
+Use secure methods for storing tokens (e.g., HttpOnly cookies).
+Implement proper error handling and validation.
+Add more security measures like CSRF protection, rate limiting, etc.
