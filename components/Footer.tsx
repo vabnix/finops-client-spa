@@ -8,7 +8,7 @@ export default function Footer() {
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="mb-4 md:mb-0">
-            <p className="text-sm text-gray-600">© 2023 FinOps Genius. All rights reserved.</p>
+            <p className="text-sm text-gray-600">© 2024 FinOps Genius. All rights reserved.</p>
           </div>
           <nav>
             <ul className="flex space-x-4">

@@ -1,21 +1,52 @@
-'use client'
-
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer
+} from 'recharts';
 
 interface ChartProps {
-  data: Array<{ month: string; expenses: number }>;
+  data: {
+    month: string;
+    expenses: number;
+    forecast: number;
+  }[];
 }
 
 const Chart: React.FC<ChartProps> = ({ data }) => {
   return (
-    <ResponsiveContainer width="100%" height={300}>
-      <BarChart data={data}>
+    <ResponsiveContainer width="100%" height={400}>
+      <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+        <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="month" />
-        <YAxis />
-        <Tooltip />
-        <Bar dataKey="expenses" fill="#3b82f6" />
-      </BarChart>
+        <YAxis 
+          tickFormatter={(value) => `$${value.toLocaleString()}`}
+        />
+        <Tooltip 
+          formatter={(value) => [`$${value.toLocaleString()}`, 'Amount']}
+        />
+        <Legend />
+        <Line 
+          type="monotone" 
+          dataKey="expenses" 
+          stroke="#2563eb" 
+          strokeWidth={2}
+          name="Actual Spend"
+        />
+        <Line 
+          type="monotone" 
+          dataKey="forecast" 
+          stroke="#9333ea" 
+          strokeWidth={2}
+          strokeDasharray="5 5"
+          name="Forecast"
+        />
+      </LineChart>
     </ResponsiveContainer>
   );
 };

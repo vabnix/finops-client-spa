@@ -1,8 +1,9 @@
+// Header.tsx
 'use client'
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { HomeIcon, CloudIcon, CogIcon, UserIcon, CreditCardIcon, LogOutIcon, Menu } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -46,17 +47,11 @@ interface HeaderProps {
 }
 
 export default function Header({ isOpen, toggleSidebar }: HeaderProps) {
-  const router = useRouter()
-  const [user, setUser] = useState({
-    name: "Aum Srivastava",
-    email: "john@example.com",
+  const [user] = useState({
+    name: "Demo User",
+    email: "demo@example.com",
     image: "/Aum_Passport_Photo.jpeg"
   })
-
-  const handleLogout = () => {
-    localStorage.removeItem('token')
-    router.push('/login')
-  }
 
   return (
     <header className={`fixed top-0 left-0 w-64 h-full bg-white shadow-md z-20 transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
@@ -103,13 +98,9 @@ export default function Header({ isOpen, toggleSidebar }: HeaderProps) {
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => router.push('/profile')}>
+              <DropdownMenuItem>
                 <UserIcon className="mr-2 h-4 w-4" />
                 <span>Profile</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleLogout}>
-                <LogOutIcon className="mr-2 h-4 w-4" />
-                <span>Log out</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
