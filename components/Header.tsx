@@ -4,7 +4,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { HomeIcon, CloudIcon, CogIcon, UserIcon, CreditCardIcon, LogOutIcon, Menu } from 'lucide-react'
+import { HomeIcon, CloudIcon, CogIcon, UserIcon, CreditCardIcon, LogOutIcon, Menu, BarChart2 } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
@@ -69,7 +69,8 @@ export default function Header({ isOpen, toggleSidebar }: HeaderProps) {
             </Button>
           </div>
           <nav className="space-y-2">
-            <NavItem href="/" icon={HomeIcon}>Home</NavItem>
+            <NavItem href="/" icon={HomeIcon}>Dashboard</NavItem>
+            <NavItem href="/finops-hub" icon={BarChart2}>FinOps Hub</NavItem>
             <NavItem href="/check-aws" icon={CloudIcon}>Check AWS</NavItem>
             <NavItem href="/configuration" icon={CogIcon}>Configuration</NavItem>
             <NavItem href="/profile" icon={UserIcon}>Profile</NavItem>
