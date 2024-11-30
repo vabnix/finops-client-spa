@@ -30,7 +30,6 @@ const carbonData = [
   { region: 'us-west1', value: 0.15 },
   { region: 'us-east1', value: 0.08 },
   { region: 'asia-east1', value: 0.02 },
-  { region: 'europe-west1', value: 0.01 },
 ];
 
 export default function FinOpsHub() {
@@ -95,7 +94,7 @@ export default function FinOpsHub() {
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={potentialSavingsData} barSize={40}>
+                <BarChart data={potentialSavingsData} barSize={90}>
                   <XAxis dataKey="name" axisLine={false} />
                   <YAxis axisLine={false} />
                   <Tooltip />
